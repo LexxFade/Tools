@@ -15,8 +15,8 @@ class mainWindow(Gtk.Window):
 		headBox = Gtk.Box()
 		self.buttonLayout('~/.config/i3/icons/shutdown.png', self.shutDown)
 		self.buttonLayout('~/.config/i3/icons/restart.png', self.reStart)
-		self.buttonLayout('~/.config/i3/icons/suspend.png', self.suspend)
-		self.buttonLayout('~/.config/i3/icons/Hibernate.png', self.hibernate)
+		self.buttonLayout('~/.config/i3/icons/logout.png', self.logout)
+		self.buttonLayout('~/.config/i3/icons/hibernate.png', self.hibernate)
 		self.add(headBox)
 
 	def buttonLayout(self, icon, command):
@@ -35,8 +35,8 @@ class mainWindow(Gtk.Window):
 	def hibernate(self, button):
 		os.system('systemctl hibernate')
 
-	def suspend(self, button):
-		os.system('i3exit suspend')
+	def logout(self, button):
+		os.system('i3-msg exit')
 		Gtk.main_quit()
 		
 
