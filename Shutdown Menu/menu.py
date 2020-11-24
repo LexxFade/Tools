@@ -13,10 +13,10 @@ class mainWindow(Gtk.Window):
         
 		global headBox
 		headBox = Gtk.Box()
-		self.buttonLayout('/home/zulo/.config/i3/icons/shutdown.png', self.shutDown)
-		self.buttonLayout('/home/zulo/.config/i3/icons/restart.png', self.reStart)
-		self.buttonLayout('/home/zulo/.config/i3/icons/suspend.png', self.suspend)
-		self.buttonLayout('/home/zulo/.config/i3/icons/Hibernate.png', self.hibernate)
+		self.buttonLayout('~/.config/i3/icons/shutdown.png', self.shutDown)
+		self.buttonLayout('~/.config/i3/icons/restart.png', self.reStart)
+		self.buttonLayout('~/.config/i3/icons/suspend.png', self.suspend)
+		self.buttonLayout('~/.config/i3/icons/Hibernate.png', self.hibernate)
 		self.add(headBox)
 
 	def buttonLayout(self, icon, command):
