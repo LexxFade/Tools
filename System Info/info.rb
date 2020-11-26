@@ -3,7 +3,7 @@
 kernel = `uname -r`
 uptime = `uptime | cut -c 2-9`
 packages = `pacman -Qq | wc -l`
-icon_selected = rand(24)
+icon_selected = rand(34)
 
 icon_list = File.open("~/.scripts/art.txt", "r").readlines()
 puts ""
