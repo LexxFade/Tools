@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 kernel = `uname -r`
-uptime = `uptime | cut -c 2-9`
+uptime = `uptime | sed 's/.*up \\([^,]*\\), .*/\\1/'`
 packages = `pacman -Qq | wc -l`
 icon_selected = rand(34)
 
