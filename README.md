@@ -35,3 +35,5 @@ Cleaner [neofetch](https://github.com/dylanaraps/neofetch) alternative with cust
 ### [GUI] Youtube-dl GUI
 GUI for [youtube-dl](),  a command line tool. <br>
 Written in python using Gtk3 lib
+![home](https://raw.githubusercontent.com/LexxFade/Tools/main/YTDL-GUI/home.png)
+![advance](https://raw.githubusercontent.com/LexxFade/Tools/main/YTDL-GUI/advance.png)
