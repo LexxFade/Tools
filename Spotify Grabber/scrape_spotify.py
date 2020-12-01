@@ -1,70 +1,74 @@
 #!/usr/bin/env python
 
-# scrapes spotify playlists to get track and artist name
-# which are passed through duckduckgo to get a youtube link
-# and finally the audio is downloaded via youtube-dl 
-
-# spotify and youtube API were not used
-
-
-from bs4 import BeautifulSoup as soupy
-from os import system, rename
+from bs4 import BeautifulSoup as soup
 from urllib.request import urlopen as uReq
+from re import sub
+from os import system
+import concurrent.futures
 
-#youtube-dl is needed for this to work
+#? removes spaces and other special characters from the passed parameter
+def remove_special(phrase):
+    phrase = sub(r'\W+', '%20', phrase)
+    return phrase
 
-def convertName(title):
-    title = list(title)
-    for i in range(len(title)-1):
-        if title[i] == ' ':
-            title[i] = '%20'
-        elif title[i] == r'(' or title[i]== r')' or title[i]=='-':
-            title[i] = '%20'
-    title = ''.join(title)
-
-    try:
-        duckurl = 'https://duckduckgo.com/html?q=' + title + '%20audio%20youtube'
-        duckData = uReq(duckurl).read()
-        duckSoup = soupy(duckData ,'html.parser')
-
-        youtubeLink = str(duckSoup.findAll('a', {'class':'result__url'}, limit=1))
-        startIndex = youtubeLink.find(r'www.youtube.com/watch?v=')
-        youtubeLinkCut = youtubeLink[startIndex:-24]
-        print(youtubeLinkCut)
+#? generate array of all songs in the given spotify link
+def gen_track_list(spotify_link):
+    track_list = []
+    spotify_data = uReq(spotify_link).read()
+    spotify_soup = soup(spotify_data, 'html.parser')
     
-    except Exception:
+    raw_track_data = spotify_soup.findAll('div', {'class':'tracklist-col name'})
+    for track in raw_track_data:
+        turn_count = 0
+        track_details = track.findAll('span', {'dir':'auto'})
+        for single_detail in track_details:
+            single_detail = str(single_detail)
+            turn_count += 1
+            if turn_count == 1:
+                song_title = single_detail[36:-7]
+            elif turn_count == 2:
+                artist_name = single_detail[17:-7]
+                track_info = song_title + '%20' + artist_name
+                track_list.append(remove_special(track_info))
 
-        print(title)
-def grabSP(url):
-    spotifyPage = uReq(url).read()
-    spotifySoup = soupy(spotifyPage, 'html.parser')
+    return track_list
 
-	#-~-~-~-~-~-~-~-~-~-~-Playlist name. can be used somewhere
-    #playlistName = str(spotifySoup.head.title)
-    #playlistName = playlistName[7:19] 
+#? returns youtube link for single_track
+def gen_download_link(single_track):
+    ddg_link = r"https://duckduckgo.com/html?q=" + single_track + r"%20audio%20youtube%"
+    ddg_data = uReq(ddg_link).read()
+    ddg_soup = soup(ddg_data, 'html.parser')
+
+    youtube_link = str(ddg_soup.findAll('a', {'class':'result__url'}, limit=1))
+    start_index = youtube_link.find("www.youtube.com/watch?v=")
+    return youtube_link[start_index:-24]
+
+#? downloads the given link with youtube-dl
+def download_list(track_list, index):
+    if index <= len(track_list):
+        youtube_link = gen_download_link(track_list[index])
+        if len(youtube_link) > 5:
+            download_command = "youtube-dl -f 140 " + youtube_link
+            system(download_command)
+        index += 3
     
-    trackDetailsRaw = spotifySoup.findAll('div',{'class':'tracklist-col name'})
-    for track in trackDetailsRaw:
-        turnCount = 0
-        trackDetails = track.findAll('span', {'dir':'auto'})
-        
-        for detail in trackDetails:
-            detail = str(detail)
-            turnCount += 1
-            if turnCount ==1:
-                songDetail = detail[36:-7]
-            elif turnCount ==2:
-                artistDetail = detail[17:-7]
-                global trackFinalName
-                trackFinalName = songDetail + '-' + artistDetail
-                convertName(trackFinalName)
-            else:
-                pass
+    return index
 
-print('\r')
-print('Enter playlist link: ')
-Link = input('$ ')
+def main():
+    spotify_link = input("Spotify Playlist Link: ")
+    track_list = gen_track_list(spotify_link)
+    indexes = [0, 1, 2]
 
-grabSP(Link)
-system('pwd')
-print('Done!')
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        while indexes[0] < len(track_list):
+            process_0 = executor.submit(download_list, track_list, indexes[0])
+            process_1 = executor.submit(download_list, track_list, indexes[1])
+            process_2 = executor.submit(download_list, track_list, indexes[2])
+            
+            indexes[0] = process_0.result()
+            indexes[1] = process_1.result()
+            indexes[2] = process_2.result()
+            
+    print("playlist downloaded!")
+
+main()
