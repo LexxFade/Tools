@@ -28,7 +28,7 @@ def gen_track_list(spotify_link):
                 song_title = single_detail[36:-7]
             elif turn_count == 2:
                 artist_name = single_detail[17:-7]
-                track_info = song_title + '%20' + artist_name
+                track_info = song_title + ' ' + artist_name
                 track_list.append(remove_special(track_info))
 
     return track_list
