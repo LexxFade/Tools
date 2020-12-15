@@ -37,3 +37,7 @@ GUI for [youtube-dl](),  a command line tool. <br>
 Written in python using Gtk3 lib
 ![home](https://raw.githubusercontent.com/LexxFade/Tools/main/YTDL-GUI/home.png)
 ![advance](https://raw.githubusercontent.com/LexxFade/Tools/main/YTDL-GUI/advance.png)
+
+### [CLI] use nvidia
+A small python script to change application's `.desktop` files to make it use nvidia GPU by default.
+dependency: [prime-run](https://wiki.archlinux.org/index.php/PRIME)
