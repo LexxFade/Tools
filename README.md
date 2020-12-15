@@ -39,5 +39,5 @@ Written in python using Gtk3 lib
 ![advance](https://raw.githubusercontent.com/LexxFade/Tools/main/YTDL-GUI/advance.png)
 
 ### [CLI] use nvidia
-A small python script to change application's `.desktop` files to make it use nvidia GPU by default.
+A small python script to change application's `.desktop` files to make it use nvidia GPU by default.<br>
 dependency: [prime-run](https://wiki.archlinux.org/index.php/PRIME)
