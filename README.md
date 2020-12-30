@@ -1,6 +1,6 @@
 # Tools
 
-### [CLI] 1 Line Scripts (Run C++, Run C & YTDL)
+### [CLI] 1 Line Scripts (Run C++, Run C, Run C# & YTDL)
 These scripts allows interaction with their associated program with just one command.
 Should be added as an alias in shell config file, eg: `.bashrc` or `.zshrc`
 
