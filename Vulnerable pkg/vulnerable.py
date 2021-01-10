@@ -31,7 +31,6 @@ def list_compare(installed, vulnerables):
     indexes = []
     for i in range(len(installed)-1):
         for k in range(len(vulnerables)-1):
-            #print(f"Comparing {installed[i]} and {vulnerables[k]}")
             if vulnerables[k] == installed[i]:
                 indexes.append(k)
 
@@ -42,6 +41,7 @@ def list_output(vulnerables, indexes):
         print(f"> \033[31m{vulnerables[0][i]}\033[0m\n \033[;36m[{vulnerables[2][i]}]\033[0m \033[;34m[{vulnerables[1][i]}]\033[0m")
 
 def main():
+    # Debian (and other distro) users can change this ↓ line to make the script work for their system
     installed = str(subprocess.check_output("pacman -Qq", shell=True), 'utf-8').split("\n")
     vulnerables = vul_pkgs()
     indexes = list_compare(installed, vulnerables[0])
