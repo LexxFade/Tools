@@ -1,5 +1,6 @@
 # Simple Backup Utility
-Creates system backup by arranging user data in a zip.
+Creates system backup by arranging user data in a zip.<br>
+Give the scrip these perms- `-rwxr-xr-x`
 
 ## Usage 
 `./backsys {name for backup}`
