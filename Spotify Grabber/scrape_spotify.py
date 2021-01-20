@@ -1,20 +1,18 @@
 #!/usr/bin/env python
 
 from bs4 import BeautifulSoup as soup
-from urllib.request import urlopen as uReq
-from re import sub
 from os import system
-import concurrent.futures
+import concurrent.futures, urllib.request, re
 
 #? removes spaces and other special characters from the passed parameter
 def remove_special(phrase):
-    phrase = sub(r'\W+', '%20', phrase)
+    phrase = re.sub(r'\W+', '%20', phrase)
     return phrase
 
 #? generate array of all songs in the given spotify link
 def gen_track_list(spotify_link):
     track_list = []
-    spotify_data = uReq(spotify_link).read()
+    spotify_data = urllib.request.urlopen(spotify_link).read()
     spotify_soup = soup(spotify_data, 'html.parser')
     
     raw_track_data = spotify_soup.findAll('div', {'class':'tracklist-col name'})
@@ -35,13 +33,9 @@ def gen_track_list(spotify_link):
 
 #? returns youtube link for single_track
 def gen_download_link(single_track):
-    ddg_link = r"https://duckduckgo.com/html?q=" + single_track + r"%20audio%20youtube%"
-    ddg_data = uReq(ddg_link).read()
-    ddg_soup = soup(ddg_data, 'html.parser')
-
-    youtube_link = str(ddg_soup.findAll('a', {'class':'result__url'}, limit=1))
-    start_index = youtube_link.find("www.youtube.com/watch?v=")
-    return youtube_link[start_index:-24]
+    html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + single_trac + r"%20audio%20youtube%")
+    video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
+    return(f"https://www.youtube.com/watch?v={video_ids[0]}")
 
 #? downloads the given link with youtube-dl
 def download_list(track_list, index):
