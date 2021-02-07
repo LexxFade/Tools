@@ -1,4 +1,5 @@
 # Tools
+Open issues for suggestions.
 
 ### [CLI] AUR helper
 install packages from the AUR
